@@ -37,6 +37,10 @@ class ParkingSpace:
     def parking_sessions(self):
         return self.__parking_sessions.copy()
 
+    @property
+    def location(self):
+        return self.__location
+
     def occupy(self):
         self.__status = "occupied"
 
