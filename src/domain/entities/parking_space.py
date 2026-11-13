@@ -41,9 +41,9 @@ class ParkingSpace:
     def location(self):
         return self.__location
 
-    def occupy(self):
+    def occupy(self) -> None:
         self.__status = "occupied"
 
-    def release(self):
+    def release(self) -> None:
         self.__status = "free"
 
