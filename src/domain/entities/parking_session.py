@@ -1,5 +1,5 @@
 from typing import Optional
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 class ParkingSession:
@@ -25,4 +25,8 @@ class ParkingSession:
     def calculate_cost(self) -> float:
         return 0.0
 
+    def count_duration(self) -> float:
+        pass #????????
+
     
+

@@ -4,6 +4,7 @@ from src.domain.entities.booking import Booking
 from src.domain.entities.location import Location
 from src.domain.entities.parking_session import ParkingSession
 from src.domain.entities.wallet import Wallet
+from src.domain.entities.recommendation import Recommendation
 
 
 class User:
@@ -19,6 +20,7 @@ class User:
         self.__wallet = Wallet()
         self.__bookings: list[Booking] = []
         self.__parking_sessions: list[ParkingSession] = []
+        self.__recommendations: list[Recommendation] = []
 
     @property
     def id(self) -> int:
@@ -46,3 +48,8 @@ class User:
 
     def update_location(self) -> None:
         pass
+
+    def get_recommendations(self) -> list[Recommendation]:
+        return self.__recommendations.copy()
+
+    
