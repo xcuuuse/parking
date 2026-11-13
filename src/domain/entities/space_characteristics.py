@@ -1,4 +1,4 @@
-class SpaceStats:
+class SpaceCharacteristics:
     def __init__(
             self,
             transport_type: str,
@@ -15,8 +15,8 @@ class SpaceStats:
     def roof_availability(self) -> bool:
         return self.__roof_availability
 
-    def change_info(self, transport_type: str = ""):
-        self.__transport_type = transport_type
+    def change_characteristics(self) -> None:
+        pass
 
 
 

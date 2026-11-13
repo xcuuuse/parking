@@ -10,14 +10,14 @@ class Location:
         self.__coord_system = coord_system
 
     @property
-    def pos_x(self):
+    def pos_x(self) -> float:
         return self.__pos_x
 
     @property
-    def pos_y(self):
+    def pos_y(self) -> float:
         return self.__pos_y
 
     @property
-    def coord_system(self):
+    def coord_system(self) -> str:
         return self.__coord_system
 

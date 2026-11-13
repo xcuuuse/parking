@@ -12,7 +12,7 @@ class ParkingSession:
         self.__end_time = end_time
 
     @property
-    def start_time(self) -> datetime:
+    def start_time(self) -> Optional[datetime]:
         return self.__start_time
 
     @property
@@ -26,7 +26,9 @@ class ParkingSession:
         return 0.0
 
     def count_duration(self) -> float:
-        pass #????????
+        if not self.__end_time:
+            return 0.0
+        return (self.__end_time - self.__start_time).total_seconds() / 3600
 
-    
+
 

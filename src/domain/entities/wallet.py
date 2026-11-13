@@ -6,14 +6,14 @@ class Wallet:
         self.__payments: list[Payment] = []
 
     @property
-    def balance(self):
+    def balance(self) -> float:
         return self.__balance
 
     @property
-    def payments(self):
+    def payments(self) -> list[Payment]:
         return self.__payments.copy()
 
-    def top_up(self, amount: float):
+    def top_up(self, amount: float) -> None:
         self.__balance += amount
 
     def debit_funds(self, amount: float) -> bool:
