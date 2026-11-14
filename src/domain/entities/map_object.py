@@ -1,7 +1,7 @@
 from src.domain.entities.location import Location
 from src.domain.entities.parking_space import ParkingSpace
 
-class Object:
+class MapObject:
     def __init__(
             self,
             object_type: str,
