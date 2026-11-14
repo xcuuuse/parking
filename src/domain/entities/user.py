@@ -56,6 +56,4 @@ class User:
         self.__bookings.append(booking)
 
     def change_name(self, new_name: str) -> None:
-        self.__name = new_name
-
-
+        self.__name =  new_name

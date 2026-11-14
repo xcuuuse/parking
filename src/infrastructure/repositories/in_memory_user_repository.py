@@ -9,7 +9,7 @@ class InMemoryUserRepository(UserRepository):
         self.__users: dict[int, User] = {}
 
     def get_by_id(self, user_id: int) -> Optional[User]:
-        return self.__users[user_id]
+        return self.__users.get(user_id)
 
     def save(self, user: User) -> None:
         self.__users[user.id] = user
