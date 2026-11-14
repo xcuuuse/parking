@@ -1,15 +1,18 @@
-from src.domain.repositories.user_repository import UserRepository, User
+from typing import Optional
+from src.domain.repositories.user_repository import UserRepository
+from src.domain.entities.user import User
+
 
 
 class InMemoryUserRepository(UserRepository):
     def __init__(self):
         self.__users: dict[int, User] = {}
 
-    def get_by_id(self, user_id: int) -> User | None:
+    def get_by_id(self, user_id: int) -> Optional[User]:
         return self.__users[user_id]
 
-    def save(self, user: User):
-        self.__users[user.id] = user #?????? почему мы храним это в словаре, если у юзера есть свойство id
+    def save(self, user: User) -> None:
+        self.__users[user.id] = user
 
 
 

@@ -1,6 +1,6 @@
 from src.domain.repositories.map_object_repository import MapObject, MapObjectRepository
 
-class InMemoryObjectRepository(MapObjectRepository):
+class InMemoryMapObjectRepository(MapObjectRepository):
     def __init__(self, map_objects: list[MapObject]):
         self.__map_objects = map_objects
 
