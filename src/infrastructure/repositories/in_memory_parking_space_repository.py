@@ -1,0 +1,18 @@
+from src.domain.repositories.parking_space_repository import ParkingSpace, ParkingSpaceRepository
+
+class InMemoryParkingSpaceRepository(ParkingSpaceRepository):
+    def __init__(self):
+        self.__parking_spaces: dict[int, ParkingSpace] = {}
+
+    def get_all(self) -> list[ParkingSpace]:
+        return list(self.__parking_spaces.values())
+
+    def get_by_number(self, number: int) -> ParkingSpace | None:
+        return self.__parking_spaces[number]
+
+    def save(self, space: ParkingSpace):
+        self.__parking_spaces[space.number] = space
+
+
+
+
