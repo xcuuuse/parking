@@ -1,8 +1,8 @@
 class SpaceCharacteristics:
     def __init__(
             self,
-            transport_type: str,
-            roof_availability: bool
+            transport_type: str = "car",
+            roof_availability: bool = False
     ):
         self.__transport_type = transport_type
         self.__roof_availability = roof_availability

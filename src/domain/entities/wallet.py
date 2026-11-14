@@ -1,8 +1,11 @@
 from src.domain.entities.payment import Payment
 
 class Wallet:
-    def __init__(self, balance: float = 0.0):
-        self.__balance = 0.0
+    def __init__(
+            self,
+            balance: float = 0.0
+    ):
+        self.__balance = balance
         self.__payments: list[Payment] = []
 
     @property

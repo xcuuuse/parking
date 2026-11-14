@@ -18,6 +18,8 @@ class Prediction:
         return self.__expected_workload
 
     def predict_workload(self) -> float:
-        pass
+        return self.__expected_workload
+
+
 
 

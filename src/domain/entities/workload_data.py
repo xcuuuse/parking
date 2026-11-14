@@ -16,4 +16,7 @@ class WorkloadData:
         return self.__occupied_places
 
     def calculate_workload(self) -> float:
-        return self.__occupied_places / (self.__empty_places + self.__occupied_places)
+        total = self.__empty_places + self.__occupied_places
+        if total == 0:
+            return 0.0
+        return self.__occupied_places / total
