@@ -52,4 +52,10 @@ class User:
     def get_recommendations(self) -> list[Recommendation]:
         return self.__recommendations.copy()
 
-    
+    def add_booking(self, booking: Booking) -> None:
+        self.__bookings.append(booking)
+
+    def change_name(self, new_name: str) -> None:
+        self.__name = new_name
+
+

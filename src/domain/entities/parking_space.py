@@ -72,8 +72,8 @@ class ParkingSpace:
     def release(self) -> None:
         self.__status = "free"
 
-    def change_status(self) -> None:
-        pass
+    def change_status(self, new_status: str) -> None:
+        self.__status = new_status
 
     def update_characteristics(self) -> None:
         pass
@@ -82,3 +82,6 @@ class ParkingSpace:
         statistics = Statistics(period, booking_count=len(self.__bookings))
         self.__statistics.append(statistics)
         return statistics
+
+    def add_booking(self, booking: Booking) -> None:
+        self.__bookings.append(booking)

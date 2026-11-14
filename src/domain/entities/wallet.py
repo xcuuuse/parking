@@ -25,5 +25,9 @@ class Wallet:
         self.__balance -= amount
         return True
 
+    def add_payment(self, payment: Payment) -> None:
+        self.__payments.append(payment)
+
+    
 
 
