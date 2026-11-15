@@ -85,3 +85,7 @@ class ParkingSpace:
 
     def add_booking(self, booking: Booking) -> None:
         self.__bookings.append(booking)
+
+    def add_session(self, session: ParkingSession) -> None:
+        self.__parking_sessions.append(session)
+

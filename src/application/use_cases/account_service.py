@@ -1,11 +1,11 @@
+from infrastructure.repositories.in_memory_user_repository import InMemoryUserRepository
 from src.application.exceptions import UserNotFoundError, ValidationError
 from src.domain.entities.user import User
-from src.domain.repositories.user_repository import UserRepository
 
 class AccountService:
     def __init__(
             self,
-            user_repository: UserRepository
+            user_repository: InMemoryUserRepository
     ):
         self.__user_repository = user_repository
 

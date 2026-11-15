@@ -10,3 +10,13 @@ class ValidationError(ApplicationError):
     def __init__(self, message: str):
         super().__init__(message)
 
+
+class SpaceNotFoundError(ApplicationError):
+    def __init__(self, message: str):
+        super().__init__(message)
+
+class SpaceUnavailableError(ApplicationError):
+    def __init__(self, message: str):
+        super().__init__(message)
+
+

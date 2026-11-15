@@ -57,3 +57,8 @@ class User:
 
     def change_name(self, new_name: str) -> None:
         self.__name =  new_name
+
+    def add_session(self, session: ParkingSession) -> None:
+        self.__parking_sessions.append(session)
+
+    

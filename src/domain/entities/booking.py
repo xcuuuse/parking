@@ -11,7 +11,7 @@ class Booking:
     ):
         self.__start = start
         self.__end = end
-        self.__status: str = "idk change it please claude"
+        self.__status: str = "active"
 
     @property
     def start(self) -> datetime:
@@ -21,8 +21,15 @@ class Booking:
     def end(self) -> datetime:
         return self.__end
 
+    @property
+    def status(self):
+        return self.__status
+
+    
     def cancel(self) -> None:
-        self.__status = ""
+        self.__status = "cancelled"
 
     def extend(self) -> None:
         self.__end += self.EXTENSION_TIME
+
+    #доделай пж
