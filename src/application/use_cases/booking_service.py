@@ -1,18 +1,29 @@
 from datetime import datetime
+from typing import Optional
 
-from application.exceptions import ValidationError, SpaceUnavailableError
-
-from infrastructure.repositories.in_memory_parking_space_repository import InMemoryParkingSpaceRepository
-from infrastructure.repositories.in_memory_user_repository import InMemoryUserRepository
+from src.application.exceptions import (
+    ActiveBookingExistsError,
+    NoActiveBookingError,
+    SpaceUnavailableError,
+    ValidationError,
+)
+from src.application.helpers import (
+    find_active_booking,
+    find_space_by_booking,
+    get_space_or_raise,
+    get_user_or_raise,
+)
 from src.domain.entities.booking import Booking
 from src.domain.entities.parking_space import ParkingSpace
+from src.domain.repositories.parking_space_repository import ParkingSpaceRepository
+from src.domain.repositories.user_repository import UserRepository
 
 
 class BookingService:
     def __init__(
             self,
-            user_repo: InMemoryUserRepository,
-            parking_repo: InMemoryParkingSpaceRepository
+            user_repo: UserRepository,
+            parking_repo: ParkingSpaceRepository
     ):
         self.__user_repo = user_repo
         self.__parking_repo = parking_repo
@@ -23,30 +34,55 @@ class BookingService:
             space_number: int,
             start: datetime,
             end: datetime
-    ):
+    ) -> Booking:
         if start >= end:
-            raise ValidationError("Start time can not be more than end time")
-        user = self.__user_repo.get_by_id(user_id)
-        space = self.__parking_repo.get_by_number(space_number)
-        if user.bookings:
-            raise ValueError("User already has active bookings")
+            raise ValidationError("Время начала должно быть раньше времени окончания")
+        if end <= datetime.now():
+            raise ValidationError("Время окончания брони уже прошло")
+        user = get_user_or_raise(self.__user_repo, user_id)
+        space = get_space_or_raise(self.__parking_repo, space_number)
+        if find_active_booking(user) is not None:
+            raise ActiveBookingExistsError()
         if space.status != "free":
-            raise SpaceUnavailableError("Parking space is not free")
+            raise SpaceUnavailableError("Место уже занято или забронировано")
         booking = Booking(start, end)
-        user.add_booking(booking), space.add_booking(booking)
-        space.status = "booked"
-        self.__user_repo.save(user), self.__parking_repo.save(space)
+        user.add_booking(booking)
+        space.add_booking(booking)
+        space.change_status("booked")
+        self.__user_repo.save(user)
+        self.__parking_repo.save(space)
+        return booking
 
     def extend(self, user_id: int) -> Booking:
-        pass #помоги тут везде где пасс
+        user = get_user_or_raise(self.__user_repo, user_id)
+        booking = self.__get_active_booking_or_raise(user_id)
+        booking.extend()
+        self.__user_repo.save(user)
+        return booking
 
     def cancel(self, user_id: int) -> None:
-        pass
+        user = get_user_or_raise(self.__user_repo, user_id)
+        booking = self.__get_active_booking_or_raise(user_id)
+        booking.cancel()
 
-    def current_booking(self, user_id: int) -> tuple[ParkingSpace, Booking] | None:
-        pass
+        space = find_space_by_booking(self.__parking_repo, booking)
+        if space is not None:
+            space.release()
+            self.__parking_repo.save(space)
+        self.__user_repo.save(user)
 
+    def current_booking(self, user_id: int) -> Optional[tuple[ParkingSpace, Booking]]:
+        user = get_user_or_raise(self.__user_repo, user_id)
+        booking = find_active_booking(user)
+        if booking is None:
+            return None
+        space = find_space_by_booking(self.__parking_repo, booking)
+        if space is None:
+            return None
+        return space, booking
 
-
-
-
+    def __get_active_booking_or_raise(self, user_id: int) -> Booking:
+        booking = find_active_booking(get_user_or_raise(self.__user_repo, user_id))
+        if booking is None:
+            raise NoActiveBookingError()
+        return booking

@@ -1,38 +1,71 @@
 import math
 from typing import Optional
 
-from domain.entities.booking import Booking
-from domain.entities.map_object import MapObject
-from domain.entities.parking_session import ParkingSession
-from domain.entities.parking_space import ParkingSpace
-from domain.repositories.parking_space_repository import ParkingSpaceRepository
+from src.application.exceptions import SpaceNotFoundError, UserNotFoundError
+from src.domain.entities.booking import Booking
+from src.domain.entities.location import Location
+from src.domain.entities.parking_session import ParkingSession
+from src.domain.entities.parking_space import ParkingSpace
 from src.domain.entities.user import User
+from src.domain.repositories.parking_space_repository import ParkingSpaceRepository
+from src.domain.repositories.user_repository import UserRepository
 
-BASE_POINT = (0.0, 0.0)
+BASE_POINT = Location(53.9023, 27.5619, "WGS84")
 
-def count_distance(x1: float, y1: float, x2: float, y2: float) -> float:
-    return math.sqrt(abs(x1-x2)**2 + abs(y1-y2)**2)
+
+def get_user_or_raise(repo: UserRepository, user_id: int) -> User:
+    user = repo.get_by_id(user_id)
+    if user is None:
+        raise UserNotFoundError()
+    return user
+
+
+def get_space_or_raise(repo: ParkingSpaceRepository, number: int) -> ParkingSpace:
+    space = repo.get_by_number(number)
+    if space is None:
+        raise SpaceNotFoundError()
+    return space
+
+
+def start_point(user: User) -> Location:
+    return user.location or BASE_POINT
+
+
+def distance(a: Location, b: Location) -> float:
+    return math.hypot(a.pos_x - b.pos_x, a.pos_y - b.pos_y)
+
 
 def find_active_booking(user: User) -> Optional[Booking]:
-    for i in user.bookings:
-        if i.status == "active":
-            return i
-
+    for booking in user.bookings:
+        if booking.status == "active":
+            return booking
     return None
+
 
 def find_active_session(user: User) -> Optional[ParkingSession]:
-    for i in user.parking_sessions:
-        if i.end_time is None:
-            return i
+    for session in user.parking_sessions:
+        if session.end_time is None:
+            return session
     return None
 
-def find_by_booking(repo: ParkingSpaceRepository, object: MapObject):
-    pass #idk help
+
+def find_space_by_booking(
+        repo: ParkingSpaceRepository,
+        booking: Booking) -> Optional[ParkingSpace]:
+    for space in repo.get_all():
+        if booking in space.bookings:
+            return space
+    return None
 
 
-def session_price(session: ParkingSession):
-    return session.count_duration() * 0.01
+def find_space_by_session(
+        repo: ParkingSpaceRepository,
+        session: ParkingSession) -> Optional[ParkingSpace]:
+    for space in repo.get_all():
+        if session in space.parking_sessions:
+            return space
+    return None
 
 
-
-
+def session_cost(session: ParkingSession, space: ParkingSpace) -> float:
+    return round(session.calculate_duration() * space.price_per_hour, 2)

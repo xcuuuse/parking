@@ -1,38 +1,31 @@
-from infrastructure.repositories.in_memory_user_repository import InMemoryUserRepository
-from src.application.exceptions import UserNotFoundError, ValidationError
+from src.application.exceptions import ValidationError
+from src.application.helpers import get_user_or_raise
 from src.domain.entities.user import User
+from src.domain.repositories.user_repository import UserRepository
+
 
 class AccountService:
-    def __init__(
-            self,
-            user_repository: InMemoryUserRepository
-    ):
-        self.__user_repository = user_repository
+    def __init__(self, user_repo: UserRepository):
+        self.__user_repo = user_repo
 
     def get_user(self, user_id: int) -> User:
-        user = self.__user_repository.get_by_id(user_id)
-        if user is None:
-            raise UserNotFoundError("User not found")
-        return user
+        return get_user_or_raise(self.__user_repo, user_id)
 
     def change_name(self, user_id: int, new_name: str) -> None:
         new_name = new_name.strip()
         if not new_name:
-            raise ValidationError("Name can not be empty")
+            raise ValidationError("Имя не может быть пустым")
         user = self.get_user(user_id)
         user.change_name(new_name)
-        self.__user_repository.save(user)
+        self.__user_repo.save(user)
 
     def get_balance(self, user_id: int) -> float:
-        user = self.get_user(user_id)
-        return user.wallet.balance
+        return self.get_user(user_id).wallet.balance
 
     def top_up_wallet(self, user_id: int, amount: float) -> float:
         if amount <= 0:
-            raise ValidationError("sum has to be more than 0")
+            raise ValidationError("Сумма пополнения должна быть больше нуля")
         user = self.get_user(user_id)
         user.wallet.top_up(amount)
-        self.__user_repository.save(user)
+        self.__user_repo.save(user)
         return user.wallet.balance
-
-    
