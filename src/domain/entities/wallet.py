@@ -20,7 +20,7 @@ class Wallet:
         self.__balance += amount
 
     def debit_funds(self, amount: float) -> bool:
-        if self.__balance <= amount:
+        if self.__balance < amount:
             return False
         self.__balance -= amount
         return True

@@ -1,5 +1,5 @@
+from datetime import datetime
 from typing import Optional
-from datetime import datetime, timedelta
 
 
 class ParkingSession:
@@ -12,7 +12,7 @@ class ParkingSession:
         self.__end_time = end_time
 
     @property
-    def start_time(self) -> Optional[datetime]:
+    def start_time(self) -> datetime:
         return self.__start_time
 
     @property
@@ -25,10 +25,6 @@ class ParkingSession:
     def calculate_cost(self) -> float:
         return 0.0
 
-    def count_duration(self) -> float:
-        if not self.__end_time:
-            return 0.0
-        return (self.__end_time - self.__start_time).total_seconds() / 3600
-
-
-
+    def calculate_duration(self) -> float:
+        end = self.__end_time or datetime.now()
+        return (end - self.__start_time).total_seconds() / 3600
