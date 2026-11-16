@@ -1,3 +1,4 @@
+from domain.entities.location import Location
 from src.application.helpers import distance, get_space_or_raise, get_user_or_raise, start_point
 from src.domain.entities.map_object import MapObject
 from src.domain.entities.parking_space import ParkingSpace
@@ -33,3 +34,9 @@ class MapService:
 
     def space_info(self, number: int) -> ParkingSpace:
         return get_space_or_raise(self.__parking_repo, number)
+
+    def all_spaces(self) -> list[ParkingSpace]:
+        return self.__parking_repo.get_all()
+
+    def start_point(self, user_id: int) -> Location:
+        return start_point(get_user_or_raise(self.__user_repo, user_id))
