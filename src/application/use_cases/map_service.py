@@ -1,4 +1,4 @@
-from domain.entities.location import Location
+from src.domain.entities.location import Location
 from src.application.helpers import distance, get_space_or_raise, get_user_or_raise, start_point
 from src.domain.entities.map_object import MapObject
 from src.domain.entities.parking_space import ParkingSpace
