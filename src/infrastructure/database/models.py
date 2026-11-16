@@ -57,3 +57,13 @@ class MapObjectModel(Base):
     pos_y: Mapped[float] = mapped_column(Float)
     coord_system: Mapped[str] = mapped_column(String(20))
 
+class BookingModel(Base):
+    __tablename__ = "bookings"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[Optional[int]] = mapped_column(ForeignKey("users.id"), nullable=True)
+    space_number: Mapped[Optional[int]] = mapped_column(ForeignKey("parking_spaces.number"), nullable=True)
+    start: Mapped[datetime] = mapped_column(DateTime)
+    end: Mapped[datetime] = mapped_column(DateTime)
+    status: Mapped[str] = mapped_column(String(20))
+
