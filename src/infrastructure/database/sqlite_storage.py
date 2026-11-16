@@ -136,3 +136,10 @@ class SqliteStorage:
             db.flush()
             db.add_all(payment_rows)
 
+
+    def is_empty(self):
+        return not self.users and not self.spaces
+
+    def add_map_objects(self, map_objects: list[MapObject]) -> None:
+        self.map_objects.extend(map_objects)
+        self.flush()
