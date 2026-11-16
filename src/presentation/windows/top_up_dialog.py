@@ -7,8 +7,6 @@ from src.presentation.widgets.overlay import Overlay
 
 
 class TopUpDialog(Overlay):
-    """Форма пополнения кошелька (на макете её нет, придумана самостоятельно)."""
-
     def __init__(self, parent: QWidget, on_confirm: Callable[[float], bool]):
         super().__init__(parent)
         self.__on_confirm = on_confirm

@@ -11,8 +11,6 @@ from src.presentation.windows.base_screen import BaseScreen
 
 
 class Avatar(QWidget):
-    """Круглая аватарка с первой буквой имени (фото профиля в модели нет)."""
-
     def __init__(self):
         super().__init__()
         self.setFixedSize(110, 110)
@@ -35,8 +33,6 @@ class Avatar(QWidget):
 
 
 class AccountScreen(BaseScreen):
-    """«Просмотр и изменение данных аккаунта» (сценарий 10)."""
-
     def __init__(self, on_back: Callable[[], None], on_edit_profile: Callable[[], None]):
         super().__init__(on_back)
         self.__avatar = Avatar()

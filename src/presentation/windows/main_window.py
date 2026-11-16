@@ -32,12 +32,6 @@ from src.presentation.windows.wallet_screen import WalletScreen
 
 
 class MainWindow(QMainWindow):
-    """Пользовательский интерфейс из модели (класс «ПользовательскийИнтерфейс»).
-
-    Хранит все экраны в QStackedWidget и переключает их по диаграмме состояний.
-    Сам ничего не вычисляет: все действия идут через сервисы слоя application.
-    """
-
     WINDOW_SIZE = (420, 800)
     STATUS_REFRESH_MS = 5000
 
@@ -60,7 +54,6 @@ class MainWindow(QMainWindow):
         self.__route_service = route_service
         self.__account_service = account_service
 
-        # Связи из модели: Карта (1), Кнопка (*), Местоположение (*)
         self.__map = MapWidget("Минск")
         self.__buttons: list[BaseButton] = []
         self.__locations: list[Location] = []
@@ -73,10 +66,8 @@ class MainWindow(QMainWindow):
         self.__timer.timeout.connect(self.__refresh_status_panel)
         self.__timer.start(self.STATUS_REFRESH_MS)
 
-    # ================= методы из модели =================
 
     def draw_interface(self) -> None:
-        """Собирает окно целиком: главный экран, страницы меню и формы."""
         self.setWindowTitle("Парковки Минска")
         self.setFixedSize(*self.WINDOW_SIZE)
 
@@ -97,7 +88,6 @@ class MainWindow(QMainWindow):
                      self.__wallet_screen, self.__settings_screen):
             self.__stack.addWidget(page)
 
-        # Формы и меню лежат поверх любого экрана
         self.__side_menu = SideMenu(root, self.show_account, self.show_wallet, self.show_settings)
         self.__booking_dialog = BookingDialog(root, self.__confirm_booking)
         self.__change_name_dialog = ChangeNameDialog(root, self.__confirm_change_name, self.show_account)
@@ -107,13 +97,11 @@ class MainWindow(QMainWindow):
         self.show_main()
 
     def display_map(self) -> None:
-        """Передаёт карте места, заправки и мойки."""
         self.__map.set_spaces(self.__map_service.all_spaces())
         self.__map.set_map_objects(self.__map_service.map_objects())
         self.__map.set_selected(self.__selected_number)
 
     def draw_button(self) -> None:
-        """Рисует кнопку «бургер» поверх карты."""
         burger = BaseButton("☰", 44, 44, styles.DARK_BLUE, self.__side_menu.open)
         burger.setStyleSheet(burger.styleSheet() + "QPushButton { color: white; font-size: 20px; }")
         self.__buttons.append(burger)
@@ -122,7 +110,6 @@ class MainWindow(QMainWindow):
         )
 
     def display_location(self) -> None:
-        """Показывает точку пользователя или базовую точку (развилка при открытии приложения)."""
         point = self.__map_service.start_point(self.__user_id)
         defined = self.__map_service.is_location_defined(self.__user_id)
         self.__locations = [point]
@@ -132,7 +119,6 @@ class MainWindow(QMainWindow):
             else "Геолокация не определена: места от базовой точки"
         )
 
-    # ================= навигация =================
 
     def show_main(self) -> None:
         self.__side_menu.close_overlay()
@@ -157,7 +143,6 @@ class MainWindow(QMainWindow):
         self.__side_menu.close_overlay()
         self.__stack.setCurrentWidget(self.__settings_screen)
 
-    # ================= главный экран =================
 
     def __build_main_page(self) -> QWidget:
         page = QWidget()
@@ -165,7 +150,6 @@ class MainWindow(QMainWindow):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
 
-        # Карта, а поверх неё бургер и плашка статуса (виджеты в одной ячейке сетки)
         map_area = QWidget()
         self.__map_area_layout = QGridLayout(map_area)
         self.__map_area_layout.setContentsMargins(0, 0, 0, 0)
@@ -186,7 +170,6 @@ class MainWindow(QMainWindow):
             status_holder, 0, 0, Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter
         )
 
-        # Лента карточек мест под картой
         bottom = QFrame()
         bottom.setObjectName("bottom")
         bottom.setStyleSheet(f"QFrame#bottom {{ {styles.DARK_BACKGROUND} }}")
@@ -230,7 +213,6 @@ class MainWindow(QMainWindow):
         self.__status_panel.hide()
 
     def __refresh_cards(self) -> None:
-        """Пересобирает ленту карточек. Старый контейнер QScrollArea удаляет сам."""
         container = QWidget()
         container.setStyleSheet("background: transparent;")
         cards_layout = QHBoxLayout(container)
@@ -260,10 +242,8 @@ class MainWindow(QMainWindow):
             return False
         return space.status == "free" or space.number == booked_number
 
-    # ================= обработчики действий =================
 
     def __select_space(self, number: int) -> None:
-        """Выбор места на карте или в ленте: подсветка и маршрут до него (подсистемы 1 и 6)."""
         ok, space = safe_call(self, self.__map_service.space_info, number)
         if not ok:
             return
@@ -304,7 +284,6 @@ class MainWindow(QMainWindow):
             self.__refresh_main()
 
     def __release(self) -> None:
-        """Освобождение места: сначала оплата (если место платное), потом освобождение."""
         ok, required = safe_call(self, self.__payment_service.is_payment_required, self.__user_id)
         if not ok:
             return

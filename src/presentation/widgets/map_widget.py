@@ -53,8 +53,6 @@ class MapWidget(QWidget):
     def source(self) -> str:
         return self.__source
 
-    # ---------- данные для отрисовки ----------
-
     def set_spaces(self, spaces: list[ParkingSpace]) -> None:
         self.__spaces = list(spaces)
         self.update()
@@ -75,8 +73,6 @@ class MapWidget(QWidget):
     def set_selected(self, number: Optional[int]) -> None:
         self.__selected_number = number
         self.update()
-
-    # ---------- масштаб ----------
 
     def zoom_in(self) -> None:
         self.__set_zoom(self.__zoom * 1.25)
@@ -105,8 +101,6 @@ class MapWidget(QWidget):
 
     def __location_to_screen(self, location: Location) -> QPointF:
         return self.__to_screen(location.pos_x, location.pos_y)
-
-    # ---------- отрисовка ----------
 
     def resizeEvent(self, event) -> None:
         self.__zoom_in_button.move(self.width() - 48, self.height() - 96)

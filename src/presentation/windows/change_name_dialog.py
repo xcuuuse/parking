@@ -7,12 +7,6 @@ from src.presentation.widgets.overlay import Overlay
 
 
 class ChangeNameDialog(Overlay):
-    """Форма «Изменение имени пользователя».
-
-    on_confirm(имя) возвращает True при успехе. И «ОК», и «Отмена» ведут
-    на просмотр аккаунта (диаграмма состояний): это делает on_finish.
-    """
-
     def __init__(self, parent: QWidget, on_confirm: Callable[[str], bool], on_finish: Callable[[], None]):
         super().__init__(parent)
         self.__on_confirm = on_confirm

@@ -11,11 +11,6 @@ DATETIME_FORMAT = "dd.MM.yyyy HH:mm"
 
 
 class BookingDialog(Overlay):
-    """Форма «Бронь парковочного места» (сценарий 3).
-
-    on_confirm(номер, начало, конец) возвращает True, если бронь создана: тогда форма закрывается.
-    """
-
     def __init__(self, parent: QWidget, on_confirm: Callable[[int, datetime, datetime], bool]):
         super().__init__(parent)
         self.__on_confirm = on_confirm

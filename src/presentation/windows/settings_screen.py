@@ -5,7 +5,6 @@ from PyQt6.QtWidgets import QCheckBox, QFrame, QHBoxLayout, QLabel
 from src.presentation import styles
 from src.presentation.windows.base_screen import BaseScreen
 
-# Настроек нет в модели классов, поэтому они живут только в интерфейсе
 SETTINGS = [
     ("Отправлять уведомление до окончания брони?", True),
     ("Автоматически продлевать бронь?", False),
@@ -15,8 +14,6 @@ SETTINGS = [
 
 
 class SettingsScreen(BaseScreen):
-    """«Настройки системы» (сценарий 12)."""
-
     def __init__(self, on_back: Callable[[], None]):
         super().__init__(on_back)
         self.__checkboxes: list[QCheckBox] = []

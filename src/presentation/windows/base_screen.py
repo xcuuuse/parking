@@ -8,8 +8,6 @@ from src.presentation.widgets.buttons import BaseButton
 
 
 class BaseScreen(QWidget):
-    """Полноэкранная страница на тёмно-синем фоне со стрелкой «назад» в углу."""
-
     def __init__(self, on_back: Callable[[], None]):
         super().__init__()
         self.setObjectName("screen")

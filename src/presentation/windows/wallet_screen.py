@@ -11,8 +11,6 @@ LINKED_CARD = "**** **** **** 1234"
 
 
 class WalletScreen(BaseScreen):
-    """«Просмотр и пополнение кошелька» (сценарий 11)."""
-
     def __init__(self, on_back: Callable[[], None], on_top_up: Callable[[], None]):
         super().__init__(on_back)
 
