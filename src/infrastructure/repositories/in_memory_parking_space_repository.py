@@ -10,7 +10,7 @@ class InMemoryParkingSpaceRepository(ParkingSpaceRepository):
         return list(self.__parking_spaces.values())
 
     def get_by_number(self, number: int) -> Optional[ParkingSpace]:
-        return self.__parking_spaces[number]
+        return self.__parking_spaces.get(number)
 
     def save(self, space: ParkingSpace) -> None:
         self.__parking_spaces[space.number] = space
